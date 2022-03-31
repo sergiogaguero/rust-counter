@@ -19,9 +19,9 @@ async function connect(nearConfig) {
   // Initializing our contract APIs by contract name and configuration.
   window.contract = await new nearAPI.Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read-only – they don't modify the state, but usually return some value
-    viewMethods: ['get_num'],
+    viewMethods: ['get_message'],
     // Change methods can modify the state, but you don't receive the returned value when called
-    changeMethods: ['increment', 'decrement', 'reset'],
+    changeMethods: ['store_message'],
     // Sender is the account ID to initialize transactions.
     // getAccountId() will return empty string if user is still unauthorized
     sender: window.walletConnection.getAccountId()
@@ -68,7 +68,7 @@ function updateUI() {
   }
 }
 
-document.querySelector('#plus').addEventListener('click', () => {
+/*document.querySelector('#plus').addEventListener('click', () => {
   document.querySelectorAll('button').forEach(button => button.disabled = true);
   document.querySelector('#show').classList.replace('number','loader');
   document.querySelector('#show').innerText = '';
@@ -94,6 +94,12 @@ document.querySelector('#b').addEventListener('click', () => {
 });
 document.querySelector('#d').addEventListener('click', () => {
   document.querySelector('.dot').classList.toggle('on');
+}); */
+
+
+document.querySelector('#sendMessage').addEventListener('click', () => {
+  var msg = document.querySelector('#message').value;
+  contract.store_message( { key: window.walletConnection.getAccountId(), value: msg }  , ).then(updateUI);
 });
 
 // Log in user using NEAR Wallet on "Sign In" button click
