@@ -8,32 +8,23 @@ describe('Token', function () {
     near = await nearlib.connect(nearConfig);
     accountId = nearConfig.contractName;
     contract = await near.loadContract(nearConfig.contractName, {
-      viewMethods: ['get_num'],
-      changeMethods: ['increment', 'decrement', 'reset'],
+      viewMethods: ['get_message'],
+      changeMethods: ['store_message'],
       sender: accountId
     });
   });
 
-  describe('counter', function () {
-    it('can be incremented', async function () {
-      const startCounter = await contract.get_num();
-      await contract.increment();
-      const endCounter = await contract.get_num();
-      expect(endCounter).toEqual(startCounter + 1);
+  describe('message', function () {
+    it('can be stored and retrieve', async function () {
+      key = 'testKey';
+      value = 'test message';
+      await contract.store_message( { key, value }  , );
+      let retrievedMessage = '';
+      contract.get_message({ key}).then(message => {  
+        retrievedMessage = message;
+        expect(retrievedMessage).toEqual(value);
+      });
     });
-    it('can be decremented', async function () {
-      await contract.increment();
-      const startCounter = await contract.get_num();
-      await contract.decrement();
-      const endCounter = await contract.get_num();
-      expect(endCounter).toEqual(startCounter - 1);
-    });
-    it('can be reset', async function () {
-      await contract.increment();
-      const startCounter = await contract.get_num();
-      await contract.reset();
-      const endCounter = await contract.get_num();
-      expect(endCounter).toEqual(0);
-    });
+   
   });
 });

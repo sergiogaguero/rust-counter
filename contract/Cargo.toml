@@ -1,5 +1,5 @@
 [package]
-name = "rust-counter-tutorial"
+name = "rust-4ever-love"
 version = "0.1.0"
 authors = ["Near Inc <hello@near.org>"]
 edition = "2018"
@@ -10,8 +10,8 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 near-sdk = "3.1.0"
 
-[dev-dependencies]
-near-sdk-sim = "3.1.0"
+# [dev-dependencies]
+# near-sdk-sim = "3.1.0"
 
 [profile.release]
 codegen-units = 1

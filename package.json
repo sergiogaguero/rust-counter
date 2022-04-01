@@ -1,11 +1,11 @@
 {
-  "name": "rust-counter",
-  "description": "Counter Smart Contract\n\nThis project contains implementation of counter backed by blockchain, written in Rust.",
+  "name": "rust-4ever",
+  "description": "4ever Love Messages Smart Contract\n\nThis project contains implementation of 4ever lov messages backed by blockchain, written in Rust.",
   "version": "0.0.1",
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
     "build": "cd contract && cargo build --target wasm32-unknown-unknown --release",
-    "postbuild": "cp contract/target/wasm32-unknown-unknown/release/rust_counter_tutorial.wasm ./out/main.wasm",
+    "postbuild": "cp contract/target/wasm32-unknown-unknown/release/rust_4ever_love.wasm ./out/main.wasm",
     "deploy:contract": "near deploy",
     "deploy:pages": "gh-pages -d src",
     "deploy": "yarn build && yarn deploy:contract",

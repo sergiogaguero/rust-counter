@@ -1,22 +1,18 @@
-Counter example in Rust
+Love message example in Rust
 =================================
 
-[![Open in Gitpod!](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/near-examples/rust-counter)
+[![Open in Gitpod!](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/near-examples/near-4ever)
 
 <!-- MAGIC COMMENT: DO NOT DELETE! Everything above this line is hidden on NEAR Examples page -->
 
 ## Description
 
-This contract implements simple counter backed by storage on blockchain.
-Contract in `contract/src/lib.rs` provides methods to increment / decrement counter and get it's current value or reset.
-
-Plus and minus buttons increase and decrease value correspondingly. When button L is toggled, a little light turns on, just for fun. RS button is for reset. LE and RE buttons to let the robot wink at you.
 
 ## To Run
 Open in the Gitpod link above or clone the repository.
 
 ```
-git clone https://github.com/near-examples/rust-counter
+git clone https://github.com/near-examples/near-4ever
 ```
 
 

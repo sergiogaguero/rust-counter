@@ -46,70 +46,50 @@ function errorHelper(err) {
 
 function updateUI() {
   if (!window.walletConnection.getAccountId()) {
-    Array.from(document.querySelectorAll('.sign-in')).map(it => it.style = 'display: block;');
+    document.querySelector('.sign-in').style.display = 'block';
+    document.querySelector('#form').style.display = 'none';
+    document.querySelector('.sign-out').style.display = 'none';
   } else {
+    document.querySelector('.sign-out').style.display = 'block';
+    document.querySelector('#form').style.display = 'block';
+
     Array.from(document.querySelectorAll('.after-sign-in')).map(it => it.style = 'display: block;');
-    contract.get_num().then(count => {
-      document.querySelector('#show').classList.replace('loader','number');
-      document.querySelector('#show').innerText = count === undefined ? 'calculating...' : count;
-      document.querySelector('#left').classList.toggle('eye');
-      document.querySelectorAll('button').forEach(button => button.disabled = false);
-      if (count >= 0) {
-        document.querySelector('.mouth').classList.replace('cry','smile');
-      } else {
-        document.querySelector('.mouth').classList.replace('smile','cry');
+    var acc = document.querySelector('#myAccount')
+    acc.disabled = true;
+    acc.value = window.walletConnection.getAccountId();
+    var msgTxt = document.querySelector('#newMessage');
+    msgTxt.disabled = false;
+    contract.get_message({ key: window.walletConnection.getAccountId()}).then(message => {  
+      if (message != 'Message not found') {
+        msgTxt.value = message;
+        msgTxt.disabled = true;
+        document.querySelector('#sendMessage').style.display = 'none';
       }
-      if (count > 20 || count < -20) {
-        document.querySelector('.tongue').style.display = 'block';
-      } else {
-        document.querySelector('.tongue').style.display = 'none';
-      }
-    }).catch(err => errorHelper(err));
+    }).catch(err => errorHelper(err));;
+    document.querySelector('#sendMessage').addEventListener('click', () => {
+      var msg = document.querySelector('#newMessage');
+      msg.disabled = true;
+      contract.store_message( { key: window.walletConnection.getAccountId(), value: msg.value }  , ).then(updateUI);
+    });
+
+    document.querySelector('#getMessage').addEventListener('click', () => {
+      var msg = document.querySelector('#message').value;
+      contract.get_message({ key: window.walletConnection.getAccountId()}).then(message => {  
+        console.log("message", message);
+      });
+    });
+    
   }
 }
 
-/*document.querySelector('#plus').addEventListener('click', () => {
-  document.querySelectorAll('button').forEach(button => button.disabled = true);
-  document.querySelector('#show').classList.replace('number','loader');
-  document.querySelector('#show').innerText = '';
-  contract.increment().then(updateUI);
-});
-document.querySelector('#minus').addEventListener('click', () => {
-  document.querySelectorAll('button').forEach(button => button.disabled = true);
-  document.querySelector('#show').classList.replace('number','loader');
-  document.querySelector('#show').innerText = '';
-  contract.decrement().then(updateUI);
-});
-document.querySelector('#a').addEventListener('click', () => {
-  document.querySelectorAll('button').forEach(button => button.disabled = true);
-  document.querySelector('#show').classList.replace('number','loader');
-  document.querySelector('#show').innerText = '';
-  contract.reset().then(updateUI);
-});
-document.querySelector('#c').addEventListener('click', () => {
-  document.querySelector('#left').classList.toggle('eye');
-});
-document.querySelector('#b').addEventListener('click', () => {
-  document.querySelector('#right').classList.toggle('eye');
-});
-document.querySelector('#d').addEventListener('click', () => {
-  document.querySelector('.dot').classList.toggle('on');
-}); */
-
-
-document.querySelector('#sendMessage').addEventListener('click', () => {
-  var msg = document.querySelector('#message').value;
-  contract.store_message( { key: window.walletConnection.getAccountId(), value: msg }  , ).then(updateUI);
-});
 
 // Log in user using NEAR Wallet on "Sign In" button click
 document.querySelector('.sign-in .btn').addEventListener('click', () => {
-  walletConnection.requestSignIn(nearConfig.contractName, 'Rust Counter Example');
+  walletConnection.requestSignIn(nearConfig.contractName, 'NEAR4ever');
 });
 
-document.querySelector('.sign-out .btn').addEventListener('click', () => {
+document.querySelector('.sign-out').addEventListener('click', () => {
   walletConnection.signOut();
-  // TODO: Move redirect to .signOut() ^^^
   window.location.replace(window.location.origin + window.location.pathname);
 });
 

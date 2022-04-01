@@ -127,25 +127,30 @@
   <div class = "wrap">
     <h1 class="mb-3">NEAR4ever</h1>
     <div class = "postcard">
-
-      <div class = "letter">
-        <form action="#" method="post" class="message_form">
-          <p class = "push">Dear </p><input type = "text" id = "recipient" name = "recipient_name" placeholder = "name of recipient" class = "push"><p> ,</p><br>
-          <label for = "message">Message</label><br>
-          <textarea id = "message" name = "message_to_recipient" placeholder = "Your eyes are like smoldering coals, merciless as they burn my soul in the most delightful way. Love you."></textarea><br>
-          <!--p>Yours Lovingly, </p><br>
-          <input type = "text" id = "sender_name" name = "sender" placeholder = "your name"-->
-          <button class="btn btn-primary" id="sendMessage" style="background-color: #0072CE;">Send Message</button>
+      
+      <div id="form" class = "letter">
+        <form  class="message_form">
+          <p class = "push">I </p><input type = "text" id = "myAccount" name = "recipient_name" placeholder = "name of recipient" class = "push"><p> ,</p><br>
+          <!--label for = "message">Love Message</label--><br>
+          <textarea id = "newMessage" name = "message_to_recipient" placeholder = "Write a love message to your love one 4ever"></textarea><br>
+          <p id="message"></p><br>
 
         </form>
+        <button class="btn btn-primary" id="sendMessage" style="background-color: #0072CE;">Send Message</button>
+        <button class="btn btn-primary" id="getMessage" style="display:none; background-color: #0072CE;">Get Message</button>
+        
+        <button class="sign-out btn btn-primary" style="background-color: #0072CE;">Sign Out</button>
       </div>
-
+      <div class="sign-in" style="display: none;">
+        <p>You'll need to sign in to call contract methods:</p>
+        <button class="btn btn-primary" style="background-color: #0072CE;">Sign In</button>
+      </div>
       <div class = "address">
         <img src = "http://i44.photobucket.com/albums/f9/dandee114/stamp_zpsvbuxiwih.png" class = "mail_stamp">
-        <form action="#" method="post" class="message_form">
+        <!--form action="#" method="post" class="message_form">
         <input type = "email" id = "recipient_email" name = "recipient_email" placeholder = "recipient's account">
         </form>
-        <!--p id = "address">Cherry Lane 1514,<br>
+        <p id = "address">Cherry Lane 1514,<br>
           Lovely Heart,<br>
           Hundred Acre Wood.
         </p-->
@@ -156,16 +161,8 @@
   
   <footer>
     <p>Happily crafted by @sergiogaguero.</p>
-    <div class="sign-in" style="display: none;">
-      <p>You'll need to sign in to call contract methods:</p>
-      <button class="btn btn-primary" style="background-color: #0072CE;">Sign In</button>
-    </div>
-
+  
    
-        <div class="sign-out">
-          <button class="btn btn-primary" style="background-color: #0072CE;">Sign Out</button>
-        </div>
-    </div>
   </footer>
   <script src="./main.js"></script>
 </body>

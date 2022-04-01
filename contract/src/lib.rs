@@ -1,12 +1,3 @@
-//! This contract implements simple counter backed by storage on blockchain.
-//!
-//! The contract provides methods to [increment] / [decrement] counter and
-//! [get it's current value][get_num] or [reset].
-//!
-//! [increment]: struct.Counter.html#method.increment
-//! [decrement]: struct.Counter.html#method.decrement
-//! [get_num]: struct.Counter.html#method.get_num
-//! [reset]: struct.Counter.html#method.reset
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
@@ -37,7 +28,8 @@ impl Default for Messages {
 impl Messages {
 
     pub fn store_message(&mut self, key: String, value: String) {
-        self.message_map.insert(&key, &value);
+        let new_key = self.check_cheating(key);
+        self.message_map.insert(&new_key, &value);
         let log_message = format!("Message added!");
         env::log(log_message.as_bytes());
     }
@@ -52,24 +44,18 @@ impl Messages {
             None => "Message not found".to_string()
         }
     }
+
+    fn check_cheating(&self, key: String ) -> String {
+        // check if the account already promised his love 
+        let contain = self.message_map.contains_key(&key);
+        assert_eq!(false,contain, "You can only love once");
+        env::log("Make sure you don't overflow, my friend.".as_bytes());
+        key
+    } 
 }
 
-// unlike the struct's functions above, this function cannot use attributes #[derive(…)] or #[near_bindgen]
-// any attempts will throw helpful warnings upon 'cargo build'
-// while this function cannot be invoked directly on the blockchain, it can be called from an invoked function
-/* fn after_counter_change() {
-    // show helpful warning that i8 (8-bit signed integer) will overflow above 127 or below -128
-    env::log("Make sure you don't overflow, my friend.".as_bytes());
-} */
 
-/*
- * the rest of this file sets up unit tests
- * to run these, the command will be:
- * cargo test --package rust-counter-tutorial -- --nocapture
- * Note: 'rust-counter-tutorial' comes from cargo.toml's 'name' key
- */
-
-// use the attribute below for unit tests
+// unit tests
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -93,39 +79,44 @@ mod tests {
     }
 
     // mark individual unit tests with #[test] for them to be registered and fired
-   /* #[test]
-    fn increment() {
+   #[test]
+    fn store_and_get_message() {
         // set up the mock context into the testing environment
         let context = get_context(to_valid_account("foo.near"));
         testing_env!(context.build());
-        // instantiate a contract variable with the counter at zero
-        let mut contract = Counter { val: 0, message_map: todo!() };
-        contract.increment();
-        println!("Value after increment: {}", contract.get_num());
-        // confirm that we received 1 when calling get_num
-        assert_eq!(1, contract.get_num());
+        // instantiate a contract variable with the message in blank
+        let mut contract = Messages { message_map: LookupMap::new(b"l".to_vec()) };
+ 
+        // Stored the test message
+        contract.store_message(String::from("foo.near"), String::from("love message"));
+
+        // confirm that we received the test message when calling get_message
+        println!("This is the message that we store:  {}", contract.get_message(String::from("foo.near")));
+        assert_eq!(String::from("love message"), contract.get_message(String::from("foo.near")));
     }
 
     #[test]
-    fn decrement() {
+    fn get_message() {
         let context = VMContextBuilder::new();
         testing_env!(context.build());
-        let mut contract = Counter { val: 0, message_map: todo!() };
-        contract.decrement();
-        println!("Value after decrement: {}", contract.get_num());
-        // confirm that we received -1 when calling get_num
-        assert_eq!(-1, contract.get_num());
+        let m =  "love Message";
+        let mut contract = Messages {  message_map: LookupMap::new(b"l".to_vec()) };
+        contract.message_map.insert(&String::from("foo.near"), &String::from("love Message"));
+        println!("Value retrieved: {}", contract.get_message(String::from("foo.near")));
+        assert_eq!(m, contract.get_message(String::from("foo.near")));
     }
 
     #[test]
-    fn increment_and_reset() {
-        let context = VMContextBuilder::new();
+    #[should_panic]
+    fn check_cheating() {
+        let context = get_context(to_valid_account("foo.near"));
         testing_env!(context.build());
-        let mut contract = Counter { val: 0, message_map: todo!() };
-        contract.increment();
-        contract.reset();
-        println!("Value after reset: {}", contract.get_num());
-        // confirm that we received -1 when calling get_num
-        assert_eq!(0, contract.get_num());
-    }*/
+        // instantiate a contract variable with the message in blank
+        let mut contract = Messages { message_map: LookupMap::new(b"l".to_vec()) };
+ 
+        // Stored the test message the first time
+        contract.store_message(String::from("foo.near"), String::from("first love"));
+        // Stored the test message the second time
+        contract.store_message(String::from("foo.near"), String::from("new love"));
+    }
 }
